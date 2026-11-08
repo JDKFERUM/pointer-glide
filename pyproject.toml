@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pointer-glide"
+version = "0.1.0"
+description = "Steady vertical pointer glide for Linux and macOS, for people who cannot hold the mouse still"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "JDKFERUM" }]
+keywords = ["accessibility", "pointer", "linux", "macos", "x11"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Desktop Environment",
+    "Topic :: Accessibility",
+]
+dependencies = []
+
+[project.optional-dependencies]
+runtime = ["pynput>=1.7"]
+dev = ["pytest>=7"]
+
+[project.scripts]
+pointer-glide = "pointer_glide.cli:entry"
+
+[project.urls]
+Source = "https://github.com/JDKFERUM/pointer-glide"
+
+[tool.setuptools.packages.find]
+include = ["pointer_glide*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
