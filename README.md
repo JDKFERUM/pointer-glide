@@ -30,8 +30,12 @@ Run with `--always` if you really want it on every click without arming first.
 | 1 | 600 |
 | 2 | 300 |
 | 3 | 200 |
+| 4 | 150 |
 | 5 | 120 |
+| 6 | 100 |
 | 7 | 85.7 |
+| 8 | 75 |
+| 9 | 66.7 |
 | 10 | 60 |
 
 Mode 1 is the fastest, mode 10 the slowest; the speed is `600 / mode`.
