@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from pointer_glide.cli import main, parse_screen
+from pointer_glide.cli import _build_parser, initial_armed, main, parse_screen
 from pointer_glide.speeds import describe, speed_for
 
 
@@ -33,6 +33,17 @@ def test_list_modes_exits_zero(capsys: pytest.CaptureFixture[str]) -> None:
 def test_parse_screen_accepts_common_forms() -> None:
     assert parse_screen("1920x1080") == (1920, 1080)
     assert parse_screen("2560X1440") == (2560, 1440)
+
+
+def test_no_hotkey_flag_is_parsed() -> None:
+    args = _build_parser().parse_args(["--no-hotkey"])
+    assert args.no_hotkey is True
+    assert initial_armed(args) is True
+
+
+def test_default_run_is_not_armed() -> None:
+    args = _build_parser().parse_args([])
+    assert initial_armed(args) is False
 
 
 @pytest.mark.parametrize("value", ["1920", "axb", "1920x0", "-5x100"])

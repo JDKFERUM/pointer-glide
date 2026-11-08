@@ -63,6 +63,7 @@ screen: 2560x1440, centre (1280, 720)
 | `--mode N` | glide speed, `1` (fastest) to `10` (slowest), default `5` |
 | `--screen WxH` | set the screen size manually when it cannot be detected |
 | `--start-armed` | start with the guide armed |
+| `--no-hotkey` | do not grab F8: the guide starts armed and runs until Ctrl+C |
 | `--always` | glide on every left click, no `F8` needed |
 | `--list-modes` | print the speed table and exit |
 | `--version` | print the version and exit |
@@ -74,6 +75,8 @@ screen: 2560x1440, centre (1280, 720)
 - **macOS**: the terminal (or your launcher) needs Accessibility permission in
   *System Settings -> Privacy & Security -> Accessibility*, otherwise the
   pointer cannot be moved and no clicks are seen.
+- **Tiling window managers**: F8 may already belong to the compositor. Use
+  `--no-hotkey`, which skips the global hotkey listener and starts armed.
 - The screen size is read through `tkinter`; on a headless machine pass
   `--screen 1920x1080`.
 

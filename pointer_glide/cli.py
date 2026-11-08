@@ -54,6 +54,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="glide on every left click without arming the guide with F8 first",
     )
     parser.add_argument("--start-armed", action="store_true", help="start with the guide already armed")
+    parser.add_argument(
+        "--no-hotkey",
+        action="store_true",
+        help="do not grab F8; the guide starts armed and Ctrl+C stops the tool",
+    )
     parser.add_argument("--list-modes", action="store_true", help="print the speed table and exit")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
@@ -63,6 +68,11 @@ def _print_modes() -> None:
     print("mode  pixels per second")
     for mode, speed in describe():
         print(f"{mode:>4}  {speed:>17.1f}")
+
+
+def initial_armed(args: argparse.Namespace) -> bool:
+    """The guide starts active when there is no way to arm it later."""
+    return bool(args.always or args.start_armed or args.no_hotkey)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -87,15 +97,24 @@ def main(argv: Sequence[str] | None = None) -> int:
             speed=speed_for(args.mode),
             pointer=pointer,
             clock=time.perf_counter,
-            armed=args.always or args.start_armed,
+            armed=initial_armed(args),
         )
-        hotkey = None if args.always else start_toggle_hotkey(lambda: print("guide:", "on" if glide.toggle() else "off"))
+        hotkey = (
+            None
+            if (args.always or args.no_hotkey)
+            else start_toggle_hotkey(lambda: print("guide:", "on" if glide.toggle() else "off"))
+        )
     except BackendError as error:
         print(f"pointer-glide: {error}", file=sys.stderr)
         return 2
 
     print(f"pointer-glide {__version__}: mode {args.mode}, {glide.speed:.0f} px/s")
-    print("guide: F8 toggles it, Ctrl+C quits" if hotkey else "guide: always on")
+    if args.no_hotkey:
+        print("guide: always on, no hotkey listener")
+    elif hotkey:
+        print("guide: F8 toggles it, Ctrl+C quits")
+    else:
+        print("guide: always on")
     print(f"screen: {width}x{height}, centre {glide.center}")
 
     try:
